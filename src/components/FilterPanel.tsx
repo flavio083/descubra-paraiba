@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -28,9 +29,16 @@ export interface Filters {
 interface FilterPanelProps {
   filters: Filters;
   onChange: (filters: Filters) => void;
+  locationAvailable: boolean;
+  onRequestLocation: () => void;
 }
 
-export const FilterPanel = ({ filters, onChange }: FilterPanelProps) => {
+export const FilterPanel = ({
+  filters,
+  onChange,
+  locationAvailable,
+  onRequestLocation,
+}: FilterPanelProps) => {
   const update = (key: keyof Filters, value: Filters[keyof Filters]) => {
     onChange({ ...filters, [key]: value });
   };
@@ -75,6 +83,23 @@ export const FilterPanel = ({ filters, onChange }: FilterPanelProps) => {
             <SelectItem value="desc">Mais distantes</SelectItem>
           </SelectContent>
         </Select>
+        {!locationAvailable && (
+          <div className="mt-2">
+            <p className="text-xs text-muted-foreground">
+              {filters.distanceOrder
+                ? "A ordenação por distância precisa da sua localização."
+                : "Use sua localização para ordenar os resultados por distância."}
+            </p>
+            <Button
+              type="button"
+              variant="link"
+              onClick={onRequestLocation}
+              className="h-auto px-0 py-1 text-xs"
+            >
+              Usar minha localização
+            </Button>
+          </div>
+        )}
       </div>
 
       <div>

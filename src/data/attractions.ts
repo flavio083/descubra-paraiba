@@ -44,7 +44,7 @@ export const categoryIcons: Record<AttractionCategory, string> = {
   trail: "🥾",
   history: "🏛️",
   culture: "🎭",
-  natural_formation: "🪨",
+  natural_formation: "⛰️",
   heritage: "⛪",
 };
 

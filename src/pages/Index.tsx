@@ -38,20 +38,31 @@ const Index = () => {
 
   const handleExploreNearby = () => {
     if (!navigator.geolocation) {
-      navigate("/descobrir");
+      navigate("/descobrir", {
+        state: {
+          locationError: "Geolocalização não é suportada pelo seu navegador.",
+        },
+      });
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setUserLocation({
+        const location = {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
-        });
-        navigate("/descobrir");
+        };
+        sessionStorage.setItem("userLocation", JSON.stringify(location));
+        setUserLocation(location);
+        navigate("/descobrir", { state: { userLocation: location } });
       },
       () => {
-        navigate("/descobrir");
+        sessionStorage.removeItem("userLocation");
+        navigate("/descobrir", {
+          state: {
+            locationError: "Não foi possível obter sua localização.",
+          },
+        });
       }
     );
   };

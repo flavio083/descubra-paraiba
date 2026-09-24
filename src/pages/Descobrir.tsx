@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { AttractionCard } from "@/components/AttractionCard";
@@ -10,12 +11,35 @@ import { AttractionMap } from "@/components/AttractionMap";
 import { Attraction, filterAttractions, mapRowToAttraction } from "@/data/attractions";
 import { supabase } from "@/integrations/supabase/client";
 
+const USER_LOCATION_STORAGE_KEY = "userLocation";
+
+const getStoredLocation = () => {
+  try {
+    const storedLocation = sessionStorage.getItem(USER_LOCATION_STORAGE_KEY);
+    if (!storedLocation) return null;
+
+    const location = JSON.parse(storedLocation);
+    if (typeof location.lat === "number" && typeof location.lon === "number") {
+      return location;
+    }
+  } catch {
+    sessionStorage.removeItem(USER_LOCATION_STORAGE_KEY);
+  }
+
+  return null;
+};
+
 const Descobrir = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(
+    () => location.state?.userLocation ?? getStoredLocation()
+  );
+  const [locationError, setLocationError] = useState<string | null>(
+    () => location.state?.locationError ?? null
+  );
 
   const initialCategory = searchParams.get("categoria") as Attraction["category"] | "all" | null;
 
@@ -41,7 +65,7 @@ const Descobrir = () => {
     fetchAttractions();
   }, []);
 
-  useEffect(() => {
+  const requestLocation = () => {
     if (!navigator.geolocation) {
       setLocationError("Geolocalização não é suportada pelo seu navegador.");
       return;
@@ -49,16 +73,24 @@ const Descobrir = () => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setUserLocation({
+        const currentLocation = {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
-        });
+        };
+        sessionStorage.setItem(
+          USER_LOCATION_STORAGE_KEY,
+          JSON.stringify(currentLocation)
+        );
+        setUserLocation(currentLocation);
+        setLocationError(null);
       },
       () => {
+        sessionStorage.removeItem(USER_LOCATION_STORAGE_KEY);
+        setUserLocation(null);
         setLocationError("Não foi possível obter sua localização.");
       }
     );
-  }, []);
+  };
 
   const filtered = useMemo(
     () => filterAttractions(attractions, filters, userLocation),
@@ -89,10 +121,25 @@ const Descobrir = () => {
             {locationError && (
               <p className="text-xs text-muted-foreground mt-2">{locationError}</p>
             )}
+            {!userLocation && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={requestLocation}
+                className="mt-4 text-[11px] uppercase tracking-wider font-normal"
+              >
+                Usar minha localização
+              </Button>
+            )}
           </motion.div>
 
           <div className="grid lg:grid-cols-[280px_1fr] gap-8">
-            <FilterPanel filters={filters} onChange={setFilters} />
+            <FilterPanel
+              filters={filters}
+              onChange={setFilters}
+              locationAvailable={Boolean(userLocation)}
+              onRequestLocation={requestLocation}
+            />
 
             <div className="space-y-8">
               <div className="h-[300px] md:h-[400px] rounded-xl overflow-hidden border border-border shadow-soft">

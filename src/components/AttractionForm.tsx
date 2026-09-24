@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +33,6 @@ interface AttractionFormProps {
   open: boolean;
   onClose: () => void;
   onSaved: () => void;
-  demo?: boolean;
 }
 
 export const AttractionForm = ({
@@ -41,7 +40,6 @@ export const AttractionForm = ({
   open,
   onClose,
   onSaved,
-  demo = false,
 }: AttractionFormProps) => {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -59,18 +57,32 @@ export const AttractionForm = ({
     featured: attraction?.featured || false,
   });
 
+  useEffect(() => {
+    if (!open) return;
+
+    setForm({
+      name: attraction?.name || "",
+      slug: attraction?.slug || "",
+      description: attraction?.description || "",
+      category: (attraction?.category as AttractionCategory) || "nature",
+      municipality: attraction?.municipality || "",
+      region: attraction?.region || "",
+      latitude: attraction?.latitude?.toString() || "",
+      longitude: attraction?.longitude?.toString() || "",
+      trailLevel: (attraction?.trailLevel as TrailLevel) || "none",
+      guideRequired:
+        (attraction?.guideRequired as GuideRequirement) || "not_required",
+      images: attraction?.images?.join(",") || "",
+      featured: attraction?.featured || false,
+    });
+  }, [attraction, open]);
+
   const update = (key: keyof typeof form, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (demo) {
-      toast.info("Modo demonstração: alterações não são salvas.");
-      onClose();
-      return;
-    }
 
     setSaving(true);
 

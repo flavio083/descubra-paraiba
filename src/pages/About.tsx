@@ -4,37 +4,43 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import bannerImage from "@/assets/detail-lake-2.jpg";
 
-const values = [
+const features = [
   {
     icon: MapPin,
-    title: "Lugares Reais",
-    description: "Cada ponto turístico é verificado e apresentado com informações precisas sobre localização, acesso e infraestrutura."
+    title: "Localização",
+    description:
+      "A plataforma ajuda a visualizar os pontos turísticos no mapa e a encontrar opções próximas quando a localização é permitida.",
   },
   {
     icon: Heart,
-    title: "Paixão Local",
-    description: "Valorizamos a cultura paraibana e destacamos experiências que conectam visitantes às tradições do estado."
+    title: "Categorias",
+    description:
+      "Praias, trilhas, natureza, cultura e patrimônio ajudam a organizar a descoberta conforme o interesse de cada pessoa.",
   },
   {
     icon: Compass,
-    title: "Descoberta",
-    description: "Incentivamos a exploração consciente de praias, trilhas, formações naturais e patrimônios históricos."
+    title: "Filtros úteis",
+    description:
+      "Os filtros facilitam comparar categorias, características de trilha e necessidade de guia antes de planejar uma visita.",
   },
   {
     icon: Mountain,
-    title: "Natureza",
-    description: "Promovemos o turismo de natureza com respeito ao meio ambiente e às comunidades locais."
+    title: "Mapas",
+    description:
+      "Os mapas reúnem os pontos cadastrados e apoiam a exploração do território paraibano.",
   },
   {
     icon: Users,
-    title: "Acessibilidade",
-    description: "Organizamos informações por distância, nível de trilha e necessidade de guia para todos os perfis de viajantes."
+    title: "Informação em um só lugar",
+    description:
+      "Descrições, imagens e dados de cada ponto tornam a busca por destinos mais simples e direta.",
   },
   {
     icon: Camera,
-    title: "Inspiração",
-    description: "Mostramos a Paraíba através de imagens e descrições que inspiram novas viagens e aventuras."
-  }
+    title: "Turismo paraibano",
+    description:
+      "O projeto valoriza a diversidade de lugares e experiências que a Paraíba oferece a moradores e visitantes.",
+  },
 ];
 
 const About = () => {
@@ -42,11 +48,10 @@ const About = () => {
   const y = useTransform(scrollY, [0, 500], [0, 150]);
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <Navigation />
-      
-      {/* Hero Image with Parallax */}
-      <div className="relative w-full h-[50vh] overflow-hidden">
+
+      <div className="relative h-[50vh] w-full overflow-hidden">
         <motion.img
           src={bannerImage}
           alt="Paisagem paraibana"
@@ -54,106 +59,107 @@ const About = () => {
           initial={{ opacity: 0, scale: 1.1 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2 }}
-          className="absolute inset-0 w-full h-[120%] object-cover"
+          className="absolute inset-0 h-[120%] w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
       <main>
-        {/* Our Story Section */}
-        <section className="py-24 lg:py-32 px-6 lg:px-12">
-          <div className="max-w-4xl mx-auto">
+        <section className="px-6 py-24 lg:px-12 lg:py-32">
+          <div className="mx-auto max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Sobre Nós</span>
-              <h1 className="text-2xl md:text-3xl font-light tracking-tight mt-2 mb-8">Nossa História</h1>
-              
-              <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Sobre o projeto
+              </span>
+              <h1 className="mb-8 mt-2 text-2xl font-light tracking-tight md:text-3xl">
+                Descubra Paraíba
+              </h1>
+              <div className="space-y-6 font-light leading-relaxed text-muted-foreground">
                 <p>
-                  O Descubra Paraíba nasceu da vontade de reunir em um só lugar os destinos mais incríveis do estado. 
-                  Da costa litorânea ao sertão, das serras ao brejo, a Paraíba guarda paisagens e histórias que 
-                  merecem ser conhecidas por quem mora aqui e por quem visita.
+                  O Descubra Paraíba é uma plataforma digital para facilitar a descoberta de pontos turísticos paraibanos.
+                  Ela reúne lugares de interesse para quem deseja conhecer melhor o estado, seja morador ou visitante.
                 </p>
                 <p>
-                  Criamos esta plataforma para facilitar a descoberta de praias, trilhas, formações naturais, 
-                  patrimônios históricos e experiências culturais. Nosso objetivo é ajudar viajantes a planejar 
-                  roteiros com informações claras, filtros úteis e localização no mapa.
+                  Seu objetivo é tornar a busca mais clara e prática por meio de localização, categorias, filtros e mapas.
+                  Assim, cada pessoa pode explorar alternativas de acordo com seus interesses e planejar a próxima visita.
                 </p>
                 <p>
-                  Cada ponto turístico cadastrado passa por uma curadoria que considera acessibilidade, 
-                  infraestrutura, nível de esforço e a importância cultural ou natural do lugar. Queremos que 
-                  a descoberta da Paraíba seja simples, inspiradora e segura.
+                  A proposta é aproximar pessoas dos destinos da Paraíba e apoiar uma experiência de turismo mais informada,
+                  usando recursos digitais simples para descobrir e localizar os pontos cadastrados.
                 </p>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Why Paraíba Section */}
-        <section className="py-24 lg:py-32 px-6 lg:px-12 bg-secondary/30">
-          <div className="max-w-4xl mx-auto">
+        <section className="bg-secondary/30 px-6 py-24 lg:px-12 lg:py-32">
+          <div className="mx-auto max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">O Porquê</span>
-              <h2 className="text-2xl md:text-3xl font-light tracking-tight mt-2 mb-8">Por Que Conhecer a Paraíba?</h2>
-              
-              <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Como funciona
+              </span>
+              <h2 className="mb-8 mt-2 text-2xl font-light tracking-tight md:text-3xl">
+                Descoberta orientada por informação
+              </h2>
+              <div className="space-y-6 font-light leading-relaxed text-muted-foreground">
                 <p>
-                  A Paraíba é um dos estados mais diversos do Nordeste brasileiro. Em poucos quilômetros, é possível 
-                  ir de praias de águas mornas a serras de clima ameno, de cânions do sertão a engenhos históricos 
-                  do agreste.
+                  A plataforma apresenta os pontos cadastrados em listas e no mapa, permitindo navegar por categoria
+                  e acessar os detalhes de cada lugar.
                 </p>
                 <p>
-                  Muitos desses lugares ainda são pouco explorados pelo turismo de massa, o que preserva sua 
-                  autenticidade. Ao mesmo tempo, falta uma centralização de informações práticas para quem quer 
-                  visitá-los com segurança e respeito.
+                  Os filtros ajudam a refinar a pesquisa por características relevantes, enquanto a localização,
+                  quando autorizada, permite visualizar distâncias e ordenar os resultados.
                 </p>
                 <p>
-                  No Descubra Paraíba, acreditamos que conhecer o estado é valorizar suas comunidades, 
-                  proteger sua natureza e celebrar sua cultura. E que cada viagem bem planejada começa com 
-                  informação de qualidade.
+                  Dessa forma, o Descubra Paraíba busca oferecer um ponto de partida digital para explorar o turismo
+                  da Paraíba com mais contexto e autonomia.
                 </p>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Values Section */}
-        <section className="py-24 lg:py-32 px-6 lg:px-12">
-          <div className="max-w-6xl mx-auto">
+        <section className="px-6 py-24 lg:px-12 lg:py-32">
+          <div className="mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-16"
+              className="mb-16 text-center"
             >
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">Nossos Princípios</span>
-              <h2 className="text-2xl md:text-3xl font-light tracking-tight mt-2">O Que Nos Guia</h2>
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                Recursos
+              </span>
+              <h2 className="mt-2 text-2xl font-light tracking-tight md:text-3xl">
+                Ferramentas para descobrir a Paraíba
+              </h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {values.map((value, index) => (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {features.map((feature, index) => (
                 <motion.div
-                  key={value.title}
+                  key={feature.title}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 border border-border rounded-lg bg-card shadow-soft hover:shadow-md transition-shadow duration-300"
+                  className="rounded-lg border border-border bg-card p-8 shadow-soft transition-shadow duration-300 hover:shadow-md"
                 >
-                  <value.icon className="h-6 w-6 text-primary mb-4" />
-                  <h3 className="text-lg font-light tracking-tight mb-3">{value.title}</h3>
-                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
-                    {value.description}
+                  <feature.icon className="mb-4 h-6 w-6 text-primary" />
+                  <h3 className="mb-3 text-lg font-light tracking-tight">{feature.title}</h3>
+                  <p className="text-sm font-light leading-relaxed text-muted-foreground">
+                    {feature.description}
                   </p>
                 </motion.div>
               ))}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2, LogOut, ArrowLeft, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,27 +18,34 @@ import Footer from "@/components/Footer";
 import { AttractionForm } from "@/components/AttractionForm";
 import { Attraction, categoryLabels, mapRowToAttraction } from "@/data/attractions";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Admin = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const isDemo = searchParams.get("demo") === "true";
   const { user, loading, signOut } = useAuth();
+  const { isAdmin, loading: roleLoading } = useUserRole();
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const [fetching, setFetching] = useState(true);
   const [editing, setEditing] = useState<Attraction | null>(null);
   const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
-    if (!isDemo && !loading && !user) {
-      navigate("/auth");
+    if (loading || roleLoading) return;
+
+    if (!user) {
+      navigate("/auth", { replace: true });
+      return;
     }
-  }, [isDemo, loading, user, navigate]);
+
+    if (!isAdmin) {
+      navigate("/", { replace: true });
+    }
+  }, [loading, roleLoading, user, isAdmin, navigate]);
 
   useEffect(() => {
-    if (!isDemo && !user) return;
+    if (loading || roleLoading || !user || !isAdmin) return;
 
     const fetchAttractions = async () => {
       const { data, error } = await supabase
@@ -55,15 +62,10 @@ const Admin = () => {
     };
 
     fetchAttractions();
-  }, [isDemo, user]);
+  }, [loading, roleLoading, user, isAdmin]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir este ponto turístico?")) return;
-
-    if (isDemo) {
-      toast.info("Modo demonstração: exclusão não é salva.");
-      return;
-    }
 
     const { error } = await supabase.from("attractions").delete().eq("id", id);
     if (error) {
@@ -103,13 +105,15 @@ const Admin = () => {
     setFetching(false);
   };
 
-  if (!isDemo && (loading || !user)) {
+  if (loading || roleLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <p className="text-sm text-muted-foreground font-light">Carregando...</p>
       </div>
     );
   }
+
+  if (!user || !isAdmin) return null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -133,21 +137,15 @@ const Admin = () => {
                 <ArrowLeft className="mr-2 h-3 w-3" />
                 Voltar
               </Button>
-              {isDemo ? (
-                <Badge variant="outline" className="text-[11px] font-normal">
-                  Modo demonstração
-                </Badge>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={signOut}
-                  className="text-[11px] uppercase tracking-wider font-normal text-destructive hover:text-destructive"
-                >
-                  <LogOut className="mr-2 h-3 w-3" />
-                  Sair
-                </Button>
-              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={signOut}
+                className="text-[11px] uppercase tracking-wider font-normal text-destructive hover:text-destructive"
+              >
+                <LogOut className="mr-2 h-3 w-3" />
+                Sair
+              </Button>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -287,7 +285,6 @@ const Admin = () => {
         open={formOpen}
         onClose={closeForm}
         onSaved={handleSaved}
-        demo={isDemo}
       />
 
       <Footer />

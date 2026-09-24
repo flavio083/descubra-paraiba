@@ -1,7 +1,18 @@
-import { Palmtree, Instagram, Facebook, Twitter, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Palmtree, Instagram, Facebook, Mail, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { isAdmin } = useUserRole();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <footer className="bg-foreground text-background py-20 lg:py-24">
       <div className="container mx-auto px-6 lg:px-12">
@@ -31,45 +42,64 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-background/70 hover:text-background smooth-hover text-xs font-light">
+                <Link to="/sobre" className="text-background/70 hover:text-background smooth-hover text-xs font-light">
                   Sobre
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-background/70 hover:text-background smooth-hover text-xs font-light">
+                <Link to="/contato" className="text-background/70 hover:text-background smooth-hover text-xs font-light">
                   Contato
                 </Link>
               </li>
-              <li>
+              {user && isAdmin && (
+                <li>
                 <Link to="/admin" className="text-background/70 hover:text-background smooth-hover text-xs font-light">
                   Painel Admin
                 </Link>
-              </li>
+                </li>
+              )}
+              {user && (
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-background/70 hover:text-background smooth-hover text-xs font-light flex items-center gap-1"
+                  >
+                    <LogOut className="h-3 w-3" />
+                    Sair
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 
           <div>
             <h4 className="text-sm font-medium mb-4">Contato</h4>
             <div className="flex flex-col gap-2 mb-8">
-              <a href="mailto:contato@descubraparaiba.com" className="text-background/70 hover:text-background smooth-hover text-xs font-light flex items-center gap-2">
+              <a href="mailto:flaviano.filho@maisunifacisa.com" className="text-background/70 hover:text-background smooth-hover text-xs font-light flex items-center gap-2">
                 <Mail className="h-3 w-3" />
-                contato@descubraparaiba.com
+                flaviano.filho@maisunifacisa.com
               </a>
-              <p className="text-background/70 text-xs font-light">
-                Seg - Sex: 9h - 18h
-              </p>
             </div>
 
             <h4 className="text-sm font-medium mb-4">Redes</h4>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-background/70 hover:text-background smooth-hover">
+              <a
+                href="https://www.instagram.com/unifacisapb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram da Unifacisa"
+                className="text-background/70 hover:text-background smooth-hover"
+              >
                 <Instagram className="h-4 w-4" />
               </a>
-              <a href="#" className="text-background/70 hover:text-background smooth-hover">
+              <a
+                href="https://www.facebook.com/unifacisa/?locale=pt_BR"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook da Unifacisa"
+                className="text-background/70 hover:text-background smooth-hover"
+              >
                 <Facebook className="h-4 w-4" />
-              </a>
-              <a href="#" className="text-background/70 hover:text-background smooth-hover">
-                <Twitter className="h-4 w-4" />
               </a>
             </div>
           </div>
