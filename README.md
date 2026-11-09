@@ -1,24 +1,46 @@
-# Remix of Wildhaven Template
+# Descubra Paraíba
 
-make me a website with soft colours, cream and green tones for an off grid camping booking service, all integrated with a working booking system, lots of imagery, make it look like a framer website with smooth scroll, smooth hover states
+Plataforma de turismo para descobrir e explorar os pontos turísticos da Paraíba: praias, trilhas, formações naturais, patrimônio histórico e cultura.
 
-This project was built with [Lovable](https://lovable.dev).
+## Funcionalidades
 
-## Build with Lovable
+- Listagem e busca de atrações turísticas da Paraíba
+- Mapa interativo com todos os pontos cadastrados (Leaflet + OpenStreetMap)
+- Filtros por categoria, região e município
+- Geolocalização para explorar destinos próximos
+- Página individual de cada atração com detalhes, imagens e mapa
+- Painel administrativo (acesso restrito) para cadastro e edição de atrações
+- Autenticação segura via Supabase Auth
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/68a7aa9a-8860-4cb9-b7ae-ad7dc24d45b9).
+## Tecnologias
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+- **Frontend:** React 18 + TypeScript + Vite
+- **Estilo:** Tailwind CSS + shadcn/ui
+- **Banco de dados e autenticação:** Supabase (PostgreSQL + RLS)
+- **Mapa:** Leaflet + OpenStreetMap
+- **Animações:** Framer Motion
+- **Roteamento:** React Router DOM
 
-## Development
+## Desenvolvimento local
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requer Node.js e npm.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+git clone <url-do-repositório>
+cd gentle-wild-spots
+npm install
 npm run dev
+```
+
+Configure as variáveis de ambiente copiando `.env.example` (se disponível) ou criando um `.env.local` com as credenciais do Supabase:
+
+```
+VITE_SUPABASE_URL=sua_url
+VITE_SUPABASE_PUBLISHABLE_KEY=sua_chave_publica
+```
+
+## Build de produção
+
+```sh
+npm run build
 ```
