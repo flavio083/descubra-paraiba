@@ -58,12 +58,3 @@ O Vite informa o endereço local no terminal; com a configuração atual, o ende
 ```powershell
 npm.cmd run build
 ```
-
-## Fotografias da Home e da página Sobre
-
-- Lajedo de Pai Mateus: crédito informado — Acervo PBTur / Marco Pimentel.
-- Igreja de Nossa Senhora do Carmo: Arquivo Pessoal.
-- Piscinas Naturais do Seixas: Arquivo Pessoal.
-- Farol do Cabo Branco: imagem com marca d’água `maxbrito.com.br`; autoria não especificada aqui.
-
-As fotografias foram autorizadas para uso no projeto pelo responsável, conforme confirmação registrada no processo de desenvolvimento. A marca d’água da imagem do Farol foi preservada.
