@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { LoaderCircle, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -12,6 +12,33 @@ import { Attraction, filterAttractions, mapRowToAttraction } from "@/data/attrac
 import { supabase } from "@/integrations/supabase/client";
 
 const USER_LOCATION_STORAGE_KEY = "userLocation";
+const LOCATION_TIMEOUT_MS = 15000;
+
+type UserLocation = { lat: number; lon: number };
+
+const isValidUserLocation = (location: unknown): location is UserLocation => {
+  if (typeof location !== "object" || location === null) return false;
+
+  const coordinates = location as Partial<UserLocation>;
+  return (
+    typeof coordinates.lat === "number" &&
+    Number.isFinite(coordinates.lat) &&
+    coordinates.lat >= -90 &&
+    coordinates.lat <= 90 &&
+    typeof coordinates.lon === "number" &&
+    Number.isFinite(coordinates.lon) &&
+    coordinates.lon >= -180 &&
+    coordinates.lon <= 180
+  );
+};
+
+const clearStoredLocation = () => {
+  try {
+    sessionStorage.removeItem(USER_LOCATION_STORAGE_KEY);
+  } catch {
+    // Location state remains usable even if browser storage is unavailable.
+  }
+};
 
 const getStoredLocation = () => {
   try {
@@ -19,14 +46,50 @@ const getStoredLocation = () => {
     if (!storedLocation) return null;
 
     const location = JSON.parse(storedLocation);
-    if (typeof location.lat === "number" && typeof location.lon === "number") {
+    if (isValidUserLocation(location)) {
       return location;
     }
   } catch {
-    sessionStorage.removeItem(USER_LOCATION_STORAGE_KEY);
+    clearStoredLocation();
   }
 
+  clearStoredLocation();
   return null;
+};
+
+const getInitialLocation = (navigationState: unknown): UserLocation | null => {
+  if (typeof navigationState === "object" && navigationState !== null) {
+    const state = navigationState as {
+      userLocation?: unknown;
+      locationError?: unknown;
+    };
+
+    if (state.locationError) {
+      clearStoredLocation();
+      return null;
+    }
+
+    if (state.userLocation !== undefined) {
+      if (isValidUserLocation(state.userLocation)) return state.userLocation;
+      clearStoredLocation();
+      return null;
+    }
+  }
+
+  return getStoredLocation();
+};
+
+const getLocationErrorMessage = (error: GeolocationPositionError) => {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      return "A permissão de localização foi negada. Verifique as permissões do navegador e tente novamente.";
+    case error.POSITION_UNAVAILABLE:
+      return "Sua posição não está disponível no momento. Tente novamente em alguns instantes.";
+    case error.TIMEOUT:
+      return "A localização demorou mais que o esperado. Tente novamente.";
+    default:
+      return "Não foi possível obter sua localização. Tente novamente.";
+  }
 };
 
 const Descobrir = () => {
@@ -34,12 +97,17 @@ const Descobrir = () => {
   const location = useLocation();
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(
-    () => location.state?.userLocation ?? getStoredLocation()
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(() =>
+    getInitialLocation(location.state)
   );
   const [locationError, setLocationError] = useState<string | null>(
-    () => location.state?.locationError ?? null
+    () =>
+      typeof location.state?.locationError === "string"
+        ? location.state.locationError
+        : null
   );
+  const [isRequestingLocation, setIsRequestingLocation] = useState(false);
+  const locationRequestInProgress = useRef(false);
 
   const initialCategory = searchParams.get("categoria") as Attraction["category"] | "all" | null;
 
@@ -66,30 +134,58 @@ const Descobrir = () => {
   }, []);
 
   const requestLocation = () => {
+    if (locationRequestInProgress.current) return;
+    locationRequestInProgress.current = true;
+    setIsRequestingLocation(true);
+
+    const failLocationRequest = (message: string) => {
+      clearStoredLocation();
+      setUserLocation(null);
+      setLocationError(message);
+      locationRequestInProgress.current = false;
+      setIsRequestingLocation(false);
+    };
+
     if (!navigator.geolocation) {
-      setLocationError("Geolocalização não é suportada pelo seu navegador.");
+      failLocationRequest("Este navegador não oferece suporte à geolocalização.");
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const currentLocation = {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-        };
-        sessionStorage.setItem(
-          USER_LOCATION_STORAGE_KEY,
-          JSON.stringify(currentLocation)
-        );
-        setUserLocation(currentLocation);
-        setLocationError(null);
-      },
-      () => {
-        sessionStorage.removeItem(USER_LOCATION_STORAGE_KEY);
-        setUserLocation(null);
-        setLocationError("Não foi possível obter sua localização.");
-      }
-    );
+    clearStoredLocation();
+    setUserLocation(null);
+
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const currentLocation = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          };
+
+          if (!isValidUserLocation(currentLocation)) {
+            failLocationRequest("O navegador retornou coordenadas inválidas. Tente novamente.");
+            return;
+          }
+
+          try {
+            sessionStorage.setItem(
+              USER_LOCATION_STORAGE_KEY,
+              JSON.stringify(currentLocation)
+            );
+          } catch {
+            // In-memory state remains available for this page session.
+          }
+          setUserLocation(currentLocation);
+          setLocationError(null);
+          locationRequestInProgress.current = false;
+          setIsRequestingLocation(false);
+        },
+        (error) => failLocationRequest(getLocationErrorMessage(error)),
+        { enableHighAccuracy: false, maximumAge: 0, timeout: LOCATION_TIMEOUT_MS }
+      );
+    } catch {
+      failLocationRequest("Não foi possível acessar a localização. Verifique as permissões do navegador.");
+    }
   };
 
   const filtered = useMemo(
@@ -126,9 +222,16 @@ const Descobrir = () => {
                 variant="outline"
                 size="sm"
                 onClick={requestLocation}
-                className="mt-4 text-[11px] uppercase tracking-wider font-normal"
+                disabled={isRequestingLocation}
+                aria-live="polite"
+                className="mt-4 text-[11px] uppercase tracking-wider font-normal disabled:cursor-wait"
               >
-                Usar minha localização
+                {isRequestingLocation ? (
+                  <LoaderCircle aria-hidden="true" className="mr-2 h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <MapPin aria-hidden="true" className="mr-2 h-3.5 w-3.5" />
+                )}
+                {isRequestingLocation ? "Obtendo localização..." : "Usar minha localização"}
               </Button>
             )}
           </motion.div>

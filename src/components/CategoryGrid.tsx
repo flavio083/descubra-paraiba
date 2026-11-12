@@ -1,11 +1,27 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
 import {
-  AttractionCategory,
-  categoryLabels,
-  categoryIcons,
-} from "@/data/attractions";
+  Church,
+  Drama,
+  Footprints,
+  Landmark,
+  Mountain,
+  Trees,
+  Waves,
+  type LucideIcon,
+} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { AttractionCategory, categoryLabels } from "@/data/attractions";
+
+const categoryIcons: Record<AttractionCategory, LucideIcon> = {
+  beach: Waves,
+  nature: Trees,
+  trail: Footprints,
+  history: Landmark,
+  culture: Drama,
+  natural_formation: Mountain,
+  heritage: Church,
+};
 
 const categories: AttractionCategory[] = [
   "beach",
@@ -33,7 +49,12 @@ export const CategoryGrid = () => {
             onClick={() => navigate(`/descobrir?categoria=${category}`)}
             className="p-5 text-center border border-border shadow-soft hover:shadow-md hover:border-primary/30 transition-all duration-300 cursor-pointer"
           >
-            <div className="text-2xl mb-2">{categoryIcons[category]}</div>
+            <div className="mb-2 flex justify-center text-primary">
+              {(() => {
+                const Icon = categoryIcons[category];
+                return <Icon aria-hidden="true" className="h-7 w-7" strokeWidth={1.75} />;
+              })()}
+            </div>
             <p className="text-xs font-light text-foreground">
               {categoryLabels[category]}
             </p>

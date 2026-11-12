@@ -1,8 +1,7 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { MapPin, Heart, Compass, Mountain, Users, Camera } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import bannerImage from "@/assets/detail-lake-2.jpg";
 
 const features = [
   {
@@ -44,24 +43,19 @@ const features = [
 ];
 
 const About = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
-
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">
       <Navigation />
 
-      <div className="relative h-[50vh] w-full overflow-hidden">
+      <div className="relative aspect-video w-full overflow-hidden bg-brand-forest">
         <motion.img
-          src={bannerImage}
-          alt="Paisagem paraibana"
-          style={{ y }}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2 }}
-          className="absolute inset-0 h-[120%] w-full object-cover"
+          src="/images/about/sobre-farol-do-cabo-branco.jpg"
+          alt="Farol do Cabo Branco, em João Pessoa, com a marca d’água maxbrito.com.br visível"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0 h-full w-full object-cover object-[right_top]"
         />
-        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       <main>

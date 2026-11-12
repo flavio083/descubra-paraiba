@@ -38,16 +38,6 @@ export const categoryLabels: Record<AttractionCategory, string> = {
   heritage: "Patrimônio Histórico",
 };
 
-export const categoryIcons: Record<AttractionCategory, string> = {
-  beach: "🏖️",
-  nature: "🌳",
-  trail: "🥾",
-  history: "🏛️",
-  culture: "🎭",
-  natural_formation: "⛰️",
-  heritage: "⛪",
-};
-
 export const trailLevelLabels: Record<TrailLevel, string> = {
   none: "Sem trilha",
   easy: "Fácil",

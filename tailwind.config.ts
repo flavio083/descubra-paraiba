@@ -14,6 +14,13 @@ export default {
     },
     extend: {
       colors: {
+        brand: {
+          forest: "hsl(var(--brand-forest))",
+          sand: "hsl(var(--brand-sand))",
+          terracotta: "hsl(var(--brand-terracotta))",
+          blue: "hsl(var(--brand-blue))",
+          white: "hsl(var(--brand-white))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -60,6 +67,7 @@ export default {
       },
       fontFamily: {
         sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        editorial: ['"Lora"', 'Georgia', 'serif'],
       },
       letterSpacing: {
         tightest: '-0.03em',

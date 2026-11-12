@@ -1,46 +1,69 @@
 # Descubra Paraíba
 
-Plataforma de turismo para descobrir e explorar os pontos turísticos da Paraíba: praias, trilhas, formações naturais, patrimônio histórico e cultura.
+Plataforma para descobrir pontos turísticos da Paraíba, consultar informações sobre os destinos e explorar sua localização no mapa.
 
 ## Funcionalidades
 
-- Listagem e busca de atrações turísticas da Paraíba
-- Mapa interativo com todos os pontos cadastrados (Leaflet + OpenStreetMap)
-- Filtros por categoria, região e município
-- Geolocalização para explorar destinos próximos
-- Página individual de cada atração com detalhes, imagens e mapa
-- Painel administrativo (acesso restrito) para cadastro e edição de atrações
-- Autenticação segura via Supabase Auth
+- Busca e filtros de atrações por categorias e características.
+- Mapa interativo com Leaflet e OpenStreetMap.
+- Geolocalização para consultar distâncias e ordenar atrações próximas.
+- Páginas com detalhes das atrações cadastradas.
+- Autenticação e painel administrativo para gestão de atrações.
 
 ## Tecnologias
 
-- **Frontend:** React 18 + TypeScript + Vite
-- **Estilo:** Tailwind CSS + shadcn/ui
-- **Banco de dados e autenticação:** Supabase (PostgreSQL + RLS)
-- **Mapa:** Leaflet + OpenStreetMap
-- **Animações:** Framer Motion
-- **Roteamento:** React Router DOM
+- React, TypeScript e Vite.
+- Tailwind CSS e shadcn/ui.
+- Supabase para dados e autenticação.
+- Leaflet e OpenStreetMap.
+- Framer Motion.
 
-## Desenvolvimento local
+## Pré-requisitos
 
-Requer Node.js e npm.
+- Node.js.
+- npm (incluído com Node.js).
 
-```sh
-git clone <url-do-repositório>
-cd gentle-wild-spots
-npm install
-npm run dev
+## Configuração local
+
+No terminal, clone o repositório e entre na pasta do projeto:
+
+```powershell
+git clone https://github.com/flavio083/descubra-paraiba.git
+cd descubra-paraiba
+npm.cmd ci
+Copy-Item .env.example .env
 ```
 
-Configure as variáveis de ambiente copiando `.env.example` (se disponível) ou criando um `.env.local` com as credenciais do Supabase:
+Abra o arquivo `.env` local e preencha:
 
+```env
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
 ```
-VITE_SUPABASE_URL=sua_url
-VITE_SUPABASE_PUBLISHABLE_KEY=sua_chave_publica
+
+Use a URL do projeto Supabase e sua chave pública (publishable/anon) fornecidas pelo responsável pelo projeto. Cada integrante deve manter seu próprio `.env` local. Esse arquivo é ignorado pelo Git e não deve ser enviado ao GitHub.
+
+Somente a chave pública apropriada para uso no frontend deve ser configurada. Nunca coloque `service_role` ou secret keys em variáveis `VITE_*`: essas variáveis são incorporadas ao código entregue ao navegador.
+
+Inicie o servidor de desenvolvimento:
+
+```powershell
+npm.cmd run dev
 ```
+
+O Vite informa o endereço local no terminal; com a configuração atual, o endereço é `http://localhost:8080`.
 
 ## Build de produção
 
-```sh
-npm run build
+```powershell
+npm.cmd run build
 ```
+
+## Fotografias da Home e da página Sobre
+
+- Lajedo de Pai Mateus: crédito informado — Acervo PBTur / Marco Pimentel.
+- Igreja de Nossa Senhora do Carmo: Arquivo Pessoal.
+- Piscinas Naturais do Seixas: Arquivo Pessoal.
+- Farol do Cabo Branco: imagem com marca d’água `maxbrito.com.br`; autoria não especificada aqui.
+
+As fotografias foram autorizadas para uso no projeto pelo responsável, conforme confirmação registrada no processo de desenvolvimento. A marca d’água da imagem do Farol foi preservada.

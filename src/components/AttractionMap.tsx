@@ -27,8 +27,11 @@ export const AttractionMap = ({
       mapInstanceRef.current = null;
     }
 
-    const defaultCenter: [number, number] = center || [-7.12, -36.5];
-    const map = L.map(mapRef.current).setView(defaultCenter, zoom);
+    const defaultCenter: [number, number] = userLocation
+      ? [userLocation.lat, userLocation.lon]
+      : center || [-7.12, -36.5];
+    const initialZoom = userLocation ? 12 : zoom;
+    const map = L.map(mapRef.current).setView(defaultCenter, initialZoom);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
@@ -64,7 +67,7 @@ export const AttractionMap = ({
         .bindPopup("Sua localização");
     }
 
-    if (!center && attractions.length > 0) {
+    if (!userLocation && !center && attractions.length > 0) {
       const group = L.featureGroup(
         attractions.map((a) => L.marker([a.latitude, a.longitude]))
       );
