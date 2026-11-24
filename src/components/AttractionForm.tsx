@@ -46,6 +46,7 @@ export const AttractionForm = ({
     name: attraction?.name || "",
     slug: attraction?.slug || "",
     description: attraction?.description || "",
+    history: attraction?.history || "",
     category: (attraction?.category as AttractionCategory) || "nature",
     municipality: attraction?.municipality || "",
     region: attraction?.region || "",
@@ -64,6 +65,7 @@ export const AttractionForm = ({
       name: attraction?.name || "",
       slug: attraction?.slug || "",
       description: attraction?.description || "",
+      history: attraction?.history || "",
       category: (attraction?.category as AttractionCategory) || "nature",
       municipality: attraction?.municipality || "",
       region: attraction?.region || "",
@@ -90,6 +92,7 @@ export const AttractionForm = ({
       name: form.name,
       slug: form.slug,
       description: form.description,
+      history: form.history.trim() || null,
       category: form.category,
       municipality: form.municipality,
       region: form.region,
@@ -155,6 +158,17 @@ export const AttractionForm = ({
               onChange={(e) => update("description", e.target.value)}
               required
               className="rounded-md text-sm font-light min-h-[100px]"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="history">História do local</Label>
+            <Textarea
+              id="history"
+              value={form.history}
+              onChange={(e) => update("history", e.target.value)}
+              placeholder="Conte a história deste local (opcional)"
+              className="min-h-[140px] rounded-md text-sm font-light"
             />
           </div>
 

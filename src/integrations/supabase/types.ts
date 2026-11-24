@@ -21,6 +21,7 @@ export type Database = {
           description: string
           featured: boolean
           guide_required: Database["public"]["Enums"]["guide_requirement"]
+          history: string | null
           id: string
           images: string[]
           latitude: number
@@ -38,6 +39,7 @@ export type Database = {
           description: string
           featured?: boolean
           guide_required?: Database["public"]["Enums"]["guide_requirement"]
+          history?: string | null
           id?: string
           images?: string[]
           latitude: number
@@ -55,6 +57,7 @@ export type Database = {
           description?: string
           featured?: boolean
           guide_required?: Database["public"]["Enums"]["guide_requirement"]
+          history?: string | null
           id?: string
           images?: string[]
           latitude?: number

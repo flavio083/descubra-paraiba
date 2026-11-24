@@ -15,6 +15,7 @@ export interface Attraction {
   name: string;
   slug: string;
   description: string;
+  history: string | null;
   category: AttractionCategory;
   municipality: string;
   region: string;
@@ -65,6 +66,7 @@ export function mapRowToAttraction(row: {
   name: string;
   slug: string;
   description: string;
+  history: string | null;
   category: AttractionCategory;
   municipality: string;
   region: string;
@@ -82,6 +84,7 @@ export function mapRowToAttraction(row: {
     name: row.name,
     slug: row.slug,
     description: row.description,
+    history: row.history ?? null,
     category: row.category,
     municipality: row.municipality,
     region: row.region,

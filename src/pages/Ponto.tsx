@@ -116,6 +116,16 @@ const Ponto = () => {
                   <p className="text-sm text-muted-foreground font-light leading-relaxed">
                     {attraction.description}
                   </p>
+                  {attraction.history?.trim() && (
+                    <section className="mt-6 border-t border-border pt-6" aria-labelledby="history-title">
+                      <h2 id="history-title" className="mb-3 text-xl font-light tracking-tight">
+                        História do local
+                      </h2>
+                      <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                        {attraction.history}
+                      </p>
+                    </section>
+                  )}
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
